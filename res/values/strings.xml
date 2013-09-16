@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">metrolink-stl-android</string>
+    <string name="toast_test">Burnt!</string>
+    <string name="tick_test">Tic-Toc!</string>
+</resources>
