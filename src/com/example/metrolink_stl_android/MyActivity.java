@@ -57,24 +57,7 @@ public class MyActivity extends Activity {
     }
 
     public static String formatTime(int millis) {
-
-        if (millis/1000 == 150) {
-            return "0" + (((millis/1000) % 100) /25 ) + ":" + secondNumbers(millis);
-        }
-
-        if (millis/1000 >= 3600) {
-            return "" + (millis/3600000) + (((millis/1000) % 100) /60 ) + secondNumbers(millis);
-        }
-
-        if (millis/1000 >= 3600){
-            return "" + millis/3600 + ":" + secondNumbers(millis);
-        }
-
-        if (millis/1000 >= 60){
-            return "0" + millis/60000 + ":" + secondNumbers(millis);
-        }
-
-        return "00:" + secondNumbers(millis);
+            return "" +  (millis/3600000) % 60 + (millis/60000) % 60 + ":" + secondNumbers(millis);
     }
 
     private static String secondNumbers(int millis) {
@@ -87,6 +70,5 @@ public class MyActivity extends Activity {
     private static String numberToString(int millis) {
         return millis < 10 ? "0" + millis : "" + millis;
     }
-
 
 }

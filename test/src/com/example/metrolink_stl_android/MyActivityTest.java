@@ -46,17 +46,25 @@ public class MyActivityTest extends ActivityInstrumentationTestCase2<MyActivity>
         assertEquals("02:00", MyActivity.formatTime(120000));
     }
 
-//    public void testTenMinute(){
-//        assertEquals("10:00", MyActivity.formatTime(3600000));
-//    }
-//
-//    public void testElevenMinute() {
-//        assertEquals("11:00", MyActivity.formatTime(3660000));
-//    }
-//
-//    public void testTwoMinutesEighteenSeconds() {
-//        assertEquals("02:30", MyActivity.formatTime(150000));
-//    }
+    public void testTwoMinutesOneSecond() {
+        assertEquals("02:01", MyActivity.formatTime(121000));
+    }
+
+    public void testOneMinuteOneSecond() {
+        assertEquals("01:01", MyActivity.formatTime(61000));
+    }
+
+    public void testTenMinute(){
+        assertEquals("10:00", MyActivity.formatTime(3600000));
+    }
+
+    public void testElevenMinute() {
+        assertEquals("11:00", MyActivity.formatTime(3660000));
+    }
+
+    public void testTwoMinutesEighteenSeconds() {
+        assertEquals("02:30", MyActivity.formatTime(150000));
+    }
 
     public void testModTest(){
         assertEquals(0, 200%20);
