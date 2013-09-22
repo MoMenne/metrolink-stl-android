@@ -2,6 +2,10 @@ package com.example.metrolink_stl_android;
 
 import android.test.ActivityInstrumentationTestCase2;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * This is a simple framework for a test of an Application.  See
  * {@link android.test.ApplicationTestCase ApplicationTestCase} for more information on
@@ -14,8 +18,22 @@ import android.test.ActivityInstrumentationTestCase2;
  */
 public class MyActivityTest extends ActivityInstrumentationTestCase2<MyActivity> {
 
+    //    public static final Date NOON = new DateTime().withHourOfDay(12).toDate();
+    public final static Date NOON = dateTimeGenerator(0,0,0);
+    public final static Date NOON05 = dateTimeGenerator(0,5,0);
+    private final static Date NOON15 = dateTimeGenerator(0,15,0);
+    public final static Date NINE05 = dateTimeGenerator(9,5,0);
+
     public MyActivityTest() {
-        super("com.example.metrolink_stl_android", MyActivity.class);
+        super(MyActivity.class);
+    }
+
+    private MyActivity activity;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        activity = this.getActivity();
     }
 
     public void testDontBlowUp() {
@@ -70,5 +88,71 @@ public class MyActivityTest extends ActivityInstrumentationTestCase2<MyActivity>
         assertEquals(0, 200%20);
         assertEquals(10, 210%20);
         assertEquals(1, 1%10);
+    }
+
+    public void testDontBlowUpReturnSomething() throws MyActivity.NoAvailableTrainException {
+
+        Date nextTrain = activity.getNextTrain(R.raw.test);
+
+        assertNotNull(nextTrain);
+    }
+
+    public void testBoardNowTime() throws MyActivity.NoAvailableTrainException {
+        MyActivity myActivity = new MyActivity();
+        SystemTime.overrideDate = NOON;
+
+        Date nextTrain = activity.getNextTrain(R.raw.test);
+
+        assertTrue(sameTime(NOON, nextTrain));
+    }
+
+    public void testBoardInFifteenMinutes() throws MyActivity.NoAvailableTrainException {
+        SystemTime.overrideDate = NOON05;
+
+        Date nextTrain = activity.getNextTrain(R.raw.test);
+
+        assertTrue(sameTime(NOON15, nextTrain));
+    }
+
+    public void testNoTrainToBoard() {
+//        MyActivity myActivity = new MyActivity();
+        SystemTime.overrideDate = NINE05;
+
+        try {
+        Date nextTrain = activity.getNextTrain(R.raw.test);
+            fail();
+        } catch (MyActivity.NoAvailableTrainException expect) {
+            // pass
+        }
+
+    }
+
+    public void test5MinDelay() throws MyActivity.NoAvailableTrainException {
+        SystemTime.overrideDate = NOON;
+
+        Date nextTrain = activity.getNextTrain(R.raw.test, 5);
+
+        assertTrue(sameTime(NOON15, nextTrain));
+    }
+
+    private static boolean sameTime(Date date, Date anotherDate) {
+        System.out.println(date.toString());
+        System.out.println(anotherDate.toString());
+        boolean b = Math.abs(date.getTime() - anotherDate.getTime()) < seconds(5);
+        if (!b) assertEquals(date.toString(), anotherDate.toString());
+        return b;
+    }
+
+    private static int seconds(int milliseconds) {
+        return milliseconds * 1000;
+    }
+
+    public static Date dateTimeGenerator(int hour, int minute, int second){
+        Calendar genCalendar = Calendar.getInstance();
+        genCalendar.setTime(new Date());
+        genCalendar.set(Calendar.HOUR, hour);
+        genCalendar.set(Calendar.MINUTE, minute);
+        genCalendar.set(Calendar.SECOND, second);
+        return genCalendar.getTime();
     }
 }
